@@ -15,6 +15,9 @@ def get_movie(movieId, repo):
     if movie is None:
         raise MovieNotFoundException
 
+    if movie.poster is None:
+        repo.get_poster(movie)
+
     return movie
 
 def has_watch(movie, username, repo):
@@ -57,3 +60,4 @@ def remove_from_watchlist(username, movieId, repo):
         raise MovieNotFoundException
 
     repo.remove_watch(user, movie)
+
