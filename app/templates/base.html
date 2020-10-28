@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %} {% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <nav class="nav">
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('home.index') }}">Movies App</a>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('home.index') }}">Home</a></li>
+            </ul>
+            <ul class="nav-right">
+                {% if 'username' in session %}
+                    <li>{{ session.username }}</li>
+                    <li><a href="{{ url_for('movie.watchlist') }}">WatchList</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}">LogOut</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

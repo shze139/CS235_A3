@@ -1,0 +1,29 @@
+{% macro render_field(field) %}
+  <div>
+    <label>{{ field.label }}</label>
+    <div>{{ field() }}
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <div class="field-error">
+          {{ error }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_message(field) %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+        <div class="message {{category}} text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+{% endmacro %}
+
+{% macro active_class(name1, name2) %}{% if name1 == name2 %}active{% endif %}{% endmacro %}
+{% macro is_selected(name1, name2) %}{% if name1 == name2 %}selected{% endif %}{% endmacro %}

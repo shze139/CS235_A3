@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from '_partials.html' import is_selected %}
+
+{% block title %} Home  {% endblock %}
+
+{% block content %}
+<h3>Movies</h3>
+<div class="search">
+    <form>
+        {{ form.page(value=1) }}
+        {{ form.size(value=50) }}
+        {{ form.by() }}
+        {{ form.key() }}
+        <button>Search</button>
+    </form>
+</div>
+{% if data %}
+{% if form.key.data %}
+<div>Found <span class="is-error">{{ data.total }}</span> movies for <strong>{{ form.key.data }}</strong> by <strong>{{ form.by.data }}</strong></div>
+{% else %}
+<div>Found <span class="is-error">{{ data.total }}</span> movies by <strong>{{ form.by.data }}</strong></div>
+{% endif %}
+<div class="movies">
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th class="text-left">Title</th>
+            <th>Release Year</th>
+            <th>Runtime (Minutes)</th>
+            <th>Metascore</th>
+        </tr>
+        {% for movie in data.movies %}
+        <tr>
+            <td>{{ movie.rank }}</td>
+            <td class="text-left"><a href="{{ url_for('movie.detail', id=movie.id) }}">{{ movie.title }}</a></td>
+            <td>{{ movie.year }}</td>
+            <td>{{ movie.runtime }}</td>
+            <td>{{ movie.metascore }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% if data.totalPage > 0 %}
+<div class="paginations">
+    {% for i in range(data.totalPage) %}
+    {% if form.page.data == i + 1 %}
+    <a class="active">{{i+1}}</a>
+    {% else %}
+    <a href="{{ url_for('home.index', key=form.key.data, by=form.by.data, size=form.size.data, page=i+1) }}">{{i+1}}</a>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+{% else %}
+<ul>
+{% for key,errors in form.errors.items() %}
+{% for error in errors %}
+<li>{{ error }}</li>
+{% endfor %}
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

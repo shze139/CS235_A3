@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% from '_partials.html' import render_field %}
+{% from '_partials.html' import render_message %}
+
+{% block title %}
+WatchList
+{% endblock %}
+
+{% block content %}
+<h3>WatchList</h3>
+<div class="watchlist">
+
+{% for movie in watchList %}
+<div class="watchlist-item">
+    {{ loop.index }}. <img src="{{ movie.poster }}" alt="">
+
+        <a href="{{ url_for('movie.detail', id=movie.id) }}">{{ movie.title }}</a>
+</div>
+{% else %}
+    <div class="text-center">
+        WatchList is empty,  <a class="color1" href="{{ url_for('home.index') }}">view movies</a>
+    </div>
+{% endfor %}
+
+</div>
+{% endblock %}

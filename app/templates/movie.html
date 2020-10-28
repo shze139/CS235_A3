@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% from '_partials.html' import is_selected %}
+{% from '_partials.html' import render_field %}
+{% from '_partials.html' import render_message %}
+
+{% block title %}
+{% if movie%}
+ {{ movie.Title }}
+{% else %}
+Not Found
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h3>Movie Detail</h3>
+{% if movie %}
+    <div class="movie-detail">
+        <div class="movie-poster">
+            <img src="{{ movie.poster }}" alt="">
+        </div>
+        <div class="movie-content">
+            <h4>{{ movie.title }}</h4>
+            <div><span>Year:</span> {{ movie.year }}</div>
+            <div><span>Genre:</span> {% for item in movie.genre %} {{ item.name }} {% if not loop.last %} , {% endif%} {% endfor %}</div>
+            <div><span>Actors:</span> {% for item in movie.actors %} {{ item.full_name }} {% if not loop.last %} , {% endif%} {% endfor %}</div>
+            <div><span>Director:</span> {% for item in movie.director %} {{ item.full_name }} {% if not loop.last %} , {% endif%} {% endfor %}</div>
+            <div><span>Description:</span> {{ movie.description }}</div>
+            {% if hasWatch %}
+                <a class="remove" href="{{ url_for('movie.remove_from_watchlist', movieId=movie.id) }}">Remove From WatchList</a>
+            {% else %}
+                <a href="{{ url_for('movie.add_to_watchlist', movieId=movie.id) }}">Add To WatchList</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <h3>Movie Reviews({{ movie.reviews | length }})</h3>
+    {% if 'username' in session %}
+    {{ render_message() }}
+    <form action="{{ url_for('movie.add_review', movieId=movie.id) }}" method="post" class="review-form">
+        {{ reviewForm.csrf_token }}
+        {{ reviewForm.content() }}
+        <div>
+        <button>Add</button></div>
+    </form>
+    {% else %}
+    <div class="text-center">
+        Login to add a review. <a class="color1" href="{{ url_for('auth.login') }}">Login</a>
+    </div>
+    {% endif %}
+    <div class="reviews">
+        {% for review in movie.reviews %}
+            <div class="review">
+                <div class="review-header">
+                    <span>{{ loop.index }}.</span>
+                    <span>{{ review.user.username }}</span>
+                    <span>{{ review.timestamp }}</span>
+                </div>
+                <div class="review-content">
+                    {{ review.content }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center">
+        Movie not found
+    </div>
+{% endif %}
+{% endblock %}
